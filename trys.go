@@ -1,6 +1,9 @@
 package main
 
+import "fmt"
+
 func trys(data HangManData, testLetter rune) HangManData {
+	fmt.Println(string(testLetter))
 	if testLetter >= 'A' && testLetter <= 'Z' {
 		testLetter += 32
 	}

@@ -7,8 +7,8 @@ import (
 	"time"
 )
 
-func getFileWords(path string) string {
-	f, err := os.Open("./assets/words/" + path)
+func getFileWords() string {
+	f, err := os.Open("./assets/words/words.txt")
 	if err != nil {
 		return ""
 	}
