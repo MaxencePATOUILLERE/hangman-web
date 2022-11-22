@@ -15,6 +15,7 @@ type HangManData struct {
 	Attempts      int
 	Used          []rune
 	WhichAsciiArt string
+	Difficulty    string
 }
 
 func set(wordList string, letterFile string) HangManData {
@@ -35,14 +36,6 @@ func set(wordList string, letterFile string) HangManData {
 
 func setup(wl string, letterFile string) HangManData {
 	word := formatWord(getFileWords(wl))
-	if word == "" {
-		fmt.Println("Invalid File : " + wl + "\nSupported files are json and txt")
-		return HangManData{}
-	}
-	if letterFile != "standard.txt" && letterFile != "thinkertoy.txt" && letterFile != "shadow.txt" && letterFile != "" {
-		fmt.Println("Invalid File : " + letterFile + "\nThe file name must be either 'standard.txt' or 'shadow.txt' or 'thinkertoy.txt'")
-		return HangManData{}
-	}
 	GameData := HangManData{
 		Save:          "",
 		File:          wl,
@@ -50,6 +43,7 @@ func setup(wl string, letterFile string) HangManData {
 		ToFind:        word,
 		Attempts:      0,
 		WhichAsciiArt: letterFile,
+		Difficulty:    "",
 	}
 	GameData = reveal(GameData)
 	return GameData

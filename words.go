@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"math/rand"
 	"os"
 	"time"
@@ -10,6 +11,7 @@ import (
 func getFileWords(path string) string {
 	f, err := os.Open("./assets/words/" + path)
 	if err != nil {
+		fmt.Println("Test")
 		return ""
 	}
 	scanner := bufio.NewScanner(f)
