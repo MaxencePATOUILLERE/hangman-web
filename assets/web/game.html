@@ -5,6 +5,22 @@
     <title>Hangman</title>
 </head>
 <body>
-<h1>{{ .Word }}</h1>
+    <h3>Hangman - {{.PlayerName}}</h3>
+    {{range .PlayerList}}<p>{{.}}</p>{{end}}
+    {{if eq .Admin true}}
+    <form method="POST">
+        <select name="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+        <select name="mode">
+            <option value="versus">Versus</option>
+            <option value="coop">Cooperation</option>
+            <option value="solo">Solo</option>
+        </select>
+        <button value="submit">Start</button>
+    </form>
+    {{end}}
 </body>
 </html>

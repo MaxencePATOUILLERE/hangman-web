@@ -3,11 +3,14 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"net/http"
 	_ "syscall"
+	"text/template"
 	"time"
 )
 
 type HangManData struct {
+	UserName      string
 	Save          string
 	File          string
 	Word          string
@@ -16,39 +19,21 @@ type HangManData struct {
 	Used          []rune
 	WhichAsciiArt string
 	Difficulty    string
+	HangManState  []string
 }
 
-func set(wordList string, letterFile string) HangManData {
-	/*if saveFile != "" && isFileValid(saveFile) {
-		GameData := getFileData(&saveFile)
-		if letterFile != "" {
-			GameData.WhichAsciiArt = letterFile
+func gamePage(w http.ResponseWriter, r *http.Request, UData *UserData) {
+	UData.userData.HangManState = printHangMan(UData.userData.Attempts)
+	tmpl := template.Must(template.ParseFiles("assets/web/soloTempl.html"))
+	if r.FormValue("letter") != "" {
+		if isGood(UData.userData.ToFind, rune(r.FormValue("letter")[0])) {
+			UData.userData = trys(UData.userData, rune(r.FormValue("letter")[0]))
+		} else {
+			UData.userData.Attempts++
+			UData.userData.HangManState = printHangMan(UData.userData.Attempts)
 		}
-		printWord(GameData)
-		game(GameData)
-	} else {*/
-	printStart()
-	fmt.Println("No valid file given, start a new game ... ")
-	return setup(wordList, letterFile)
-
-	//}
-}
-
-func setup(wl string, letterFile string) HangManData {
-	word := formatWord(getFileWords(wl))
-	GameData := HangManData{
-		Save:          "",
-		File:          wl,
-		Word:          genHidden(word),
-		ToFind:        word,
-		Attempts:      0,
-		WhichAsciiArt: letterFile,
-		Difficulty:    "",
 	}
-	GameData = reveal(GameData)
-	return GameData
-	/*printWord(GameData)
-	game(GameData)*/
+	tmpl.Execute(w, UData.userData)
 }
 
 func game(data HangManData) {
