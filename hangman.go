@@ -2,10 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/gorilla/sessions"
 	"math/rand"
-	"net/http"
 	_ "syscall"
-	"text/template"
 	"time"
 )
 
@@ -22,18 +21,18 @@ type HangManData struct {
 	HangManState  []string
 }
 
-func gamePage(w http.ResponseWriter, r *http.Request, UData *UserData) {
-	UData.userData.HangManState = printHangMan(UData.userData.Attempts)
-	tmpl := template.Must(template.ParseFiles("assets/web/soloTempl.html"))
-	if r.FormValue("letter") != "" {
-		if isGood(UData.userData.ToFind, rune(r.FormValue("letter")[0])) {
-			UData.userData = trys(UData.userData, rune(r.FormValue("letter")[0]))
-		} else {
-			UData.userData.Attempts++
-			UData.userData.HangManState = printHangMan(UData.userData.Attempts)
-		}
+func setupGameData(ses *sessions.Session) UserData {
+	return UserData{
+		userData: HangManData{
+			UserName:     usernames[len(playerList)],
+			Attempts:     0,
+			HangManState: printHangMan(0),
+		},
+		finish:   false,
+		userName: usernames[len(playerList)],
+		uid:      ses.Values["uid"],
+		admin:    true,
 	}
-	tmpl.Execute(w, UData.userData)
 }
 
 func game(data HangManData) {
@@ -119,4 +118,15 @@ func checkInput(data HangManData, l rune) HangManData {
 	printHangMan(data.Attempts)
 
 	return data
+}
+
+func genMasked(txt string) string {
+	result := ""
+	for i := 0; i < len(txt); i++ {
+		if txt[i] == '_' {
+			result = result + "_"
+		}
+		result = result + "X"
+	}
+	return result
 }

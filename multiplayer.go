@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gorilla/sessions"
 	"math/rand"
 	"net/http"
@@ -33,6 +32,10 @@ func setPlayerMultiplayerData(w http.ResponseWriter, r *http.Request, ses *sessi
 
 }
 
+func versus(w http.ResponseWriter, r *http.Request, UData *UserData) {
+
+}
+
 func checkWL(r *http.Request) {
 	switch r.FormValue("difficulty") {
 	case "easy":
@@ -44,14 +47,28 @@ func checkWL(r *http.Request) {
 	}
 	data.GameUData.userData.Word = genHidden(data.GameUData.userData.ToFind)
 	data.GameUData.userData = reveal(data.GameUData.userData)
-	fmt.Println(data.GameUData.userData.Word, data.GameUData.userData.ToFind)
 	data.GameUData.userData.Attempts = 0
 	multiplayerData.UserList = append(multiplayerData.UserList, []string{data.GameUData.userName, data.GameUData.userData.Word, "0"})
 }
 
-func checkMultiplayerForm(w http.ResponseWriter, r *http.Request, ses *sessions.Session) {
+func versusGame(w http.ResponseWriter, r *http.Request, MData *MultiplayerWebPage) {
+	tmpl := template.Must(template.ParseFiles("assets/web/versusTempl.html"))
+	tmpl.Execute(w, MData)
+}
+
+func formFunc(r http.Request, w http.ResponseWriter, data WebPage) {
 	if r.FormValue("difficulty") != "" && r.FormValue("mode") != "" {
 		multiplayerData.Started = true
+		switch r.FormValue("difficulty") {
+		case "easy":
+			data.GameUData.userData.ToFind = formatWord(getFileWords("assets/words/words.txt"))
+		case "hard":
+			data.GameUData.userData.ToFind = formatWord(getFileWords("assets/words/words3.txt"))
+		case "medium":
+			data.GameUData.userData.ToFind = formatWord(getFileWords("assets/words/words2.txt"))
+		}
+		data.GameUData.userData.Word = genHidden(data.GameUData.userData.ToFind)
+		data.GameUData.userData = reveal(data.GameUData.userData)
 		switch r.FormValue("mode") {
 		case "versus":
 			multiplayerData.Mode = "versus"
@@ -60,13 +77,9 @@ func checkMultiplayerForm(w http.ResponseWriter, r *http.Request, ses *sessions.
 		case "solo":
 			multiplayerData.Started = true
 			multiplayerData.Mode = "solo"
-			dictPlayer[ses.Values["uid"]] = data.GameUData
+			dictPlayer[data.GameUData.uid] = data.GameUData
+			gamePage(w, &r, &data.GameUData)
 			w.Write([]byte{})
 		}
 	}
-}
-
-func versusGame(w http.ResponseWriter, r *http.Request, MData *MultiplayerWebPage) {
-	tmpl := template.Must(template.ParseFiles("assets/web/versusTempl.html"))
-	tmpl.Execute(w, MData)
 }

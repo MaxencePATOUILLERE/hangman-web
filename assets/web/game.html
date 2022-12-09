@@ -6,15 +6,20 @@
 </head>
 <body>
     <h3>Hangman - {{.PlayerName}}</h3>
+    <input type="button" onclick="window.location.reload();" value="Refresh" />
+    <div id="playerList">
     {{range .PlayerList}}<p>{{.}}</p>{{end}}
+    </div>
     {{if eq .Admin true}}
     <form method="POST">
         <select name="difficulty">
+            <option value="">Choose Difficulty</option>
             <option value="easy">Easy</option>
             <option value="medium">Medium</option>
             <option value="hard">Hard</option>
         </select>
         <select name="mode">
+            <option value="">Choose Mode</option>
             <option value="versus">Versus</option>
             <option value="coop">Cooperation</option>
             <option value="solo">Solo</option>

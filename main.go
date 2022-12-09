@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/sessions"
 	"net/http"
 	"text/template"
@@ -46,28 +47,19 @@ var (
 	data            = WebPage{}
 )
 
-func start(w http.ResponseWriter, r *http.Request) {
-	session, _ := store.Get(r, "cookie-name")
+func displayPage(w http.ResponseWriter, r *http.Request, data WebPage) {
 	tmpl := template.Must(template.ParseFiles("assets/web/game.html"))
-	if auth, ok := session.Values["authenticated"].(bool); !ok || !auth {
-		login(w, r)
-		setPlayerMultiplayerData(w, r, session)
-	} else {
-		data.PlayerName = dictPlayer[session.Values["uid"]].userName
-	}
-	data.PlayerList = playerList
 	if !multiplayerData.Started {
-		fmt.Println(data.GameUData.userData.Word, data.GameUData.userData.ToFind)
+		formFunc(*r, w, data)
+		data.GameUData = dictPlayer[data.GameUData.uid]
 		tmpl.Execute(w, data)
-		checkMultiplayerForm(w, r, session)
-		dictPlayer[session.Values["uid"]] = data.GameUData
 	} else {
 		data.Admin = false
+		data.GameUData = dictPlayer[data.GameUData.uid]
 		switch multiplayerData.Mode {
 		case "versus":
-			/*gamePage(w, r, &data.GameUData)
-			versusGame(w, r, &multiplayerData)*/
-			fmt.Println("Coop")
+			gamePage(w, r, &data.GameUData)
+			versusGame(w, r, &multiplayerData)
 		case "coop":
 			fmt.Println("Coop")
 		case "solo":
@@ -78,6 +70,6 @@ func start(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/", start)
+	http.HandleFunc("/", onConnect)
 	http.ListenAndServe(":8080", nil)
 }
