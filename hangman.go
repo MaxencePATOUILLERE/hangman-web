@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/gorilla/sessions"
 	"math/rand"
 	_ "syscall"
 	"time"
@@ -15,66 +16,21 @@ type HangManData struct {
 	Attempts      int
 	Used          []rune
 	WhichAsciiArt string
-	HangManState  string
+	Difficulty    string
+	HangManState  []string
 }
 
-func setup(wl string, letterFile string) HangManData {
-	word := formatWord(getFileWords())
-
-	/*if word == "" {
-		fmt.Println("Invalid File : " + wl + "\nSupported files are json and txt")
-		return HangManData{}
+func setupGameData(ses *sessions.Session) UserData {
+	return UserData{
+		userName: usernames[len(playerList)],
+		userData: HangManData{
+			Attempts:     0,
+			HangManState: printHangMan(0),
+		},
+		finish: false,
+		uid:    ses.Values["uid"],
+		admin:  true,
 	}
-	if letterFile != "standard.txt" && letterFile != "thinkertoy.txt" && letterFile != "shadow.txt" && letterFile != "" {
-		fmt.Println("Invalid File : " + letterFile + "\nThe file name must be either 'standard.txt' or 'shadow.txt' or 'thinkertoy.txt'")
-		return HangManData{}
-	}*/
-	GameData := HangManData{
-		Save:          "",
-		File:          wl,
-		Word:          genHidden(word),
-		ToFind:        word,
-		Attempts:      0,
-		WhichAsciiArt: letterFile,
-		HangManState:  "",
-	}
-	GameData = reveal(GameData)
-	return GameData
-	/*printWord(GameData)
-	game(GameData)*/
-}
-
-func game(data HangManData) {
-	var letterIn string
-	for !finish(data) {
-		fmt.Print("Choose: ")
-		fmt.Scan(&letterIn)
-		if len(letterIn) > 1 {
-			if letterIn == "STOP" || letterIn == "stop" || letterIn == "Stop" {
-				if data.Save != "" {
-					saveWithPath(data, data.Save)
-					return
-				}
-				good := true
-				for good {
-					good = !save(data)
-				}
-				return
-			} else {
-				data = guessWord(data, letterIn)
-			}
-		} else {
-			letter := rune(letterIn[0])
-			fmt.Print("\033[H\033[2J")
-			data = checkInput(data, letter)
-			printWord(data)
-		}
-	}
-	if data.Attempts == 10 {
-		print("You failed the word was : " + data.ToFind)
-		return
-	}
-	print("Congrats !")
 }
 
 func reveal(data HangManData) HangManData {
@@ -127,4 +83,24 @@ func checkInput(data HangManData, l rune) HangManData {
 	printHangMan(data.Attempts)
 
 	return data
+}
+
+func genMasked(txt string) string {
+	result := ""
+	for i := 0; i < len(txt); i++ {
+		if txt[i] == '_' {
+			result = result + "_"
+		}
+		result = result + "X"
+	}
+	return result
+}
+
+func calcScore(word string) int {
+	point := map[rune]int{'a': 1, 'b': 3, 'c': 2, 'd': 2, 'e': 1, 'f': 3, 'g': 3, 'h': 4, 'i': 1, 'j': 4, 'k': 10, 'l': 3, 'm': 2, 'n': 2, 'o': 1, 'p': 2, 'q': 4, 'r': 3, 's': 2, 't': 4, 'u': 1, 'v': 5, 'x': 10, 'y': 10, 'z': 10}
+	score := len(word)
+	for i := 0; i < len(word); i++ {
+		score += point[rune(word[i])]
+	}
+	return score
 }

@@ -1,9 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"strings"
+)
 
 func trys(data HangManData, testLetter rune) HangManData {
-	fmt.Println(string(testLetter))
 	if testLetter >= 'A' && testLetter <= 'Z' {
 		testLetter += 32
 	}
@@ -55,4 +56,16 @@ func isUsed(data HangManData, letter rune) bool {
 		}
 	}
 	return false
+}
+
+func guessWord(data HangManData, letter string) HangManData {
+	letter = strings.ToLower(letter)
+	if letter == data.ToFind {
+		data.Word = data.ToFind
+		return data
+	} else {
+		data.Attempts += 2
+		printHangMan(data.Attempts)
+	}
+	return data
 }

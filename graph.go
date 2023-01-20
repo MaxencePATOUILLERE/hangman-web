@@ -6,19 +6,19 @@ import (
 	"os"
 )
 
-func printHangMan(failAttempts int) string {
-	finalHangman := ""
+func printHangMan(failAttempts int) []string {
+	res := []string{}
 	hangMan := openHangManTxt()
 	if failAttempts == 0 {
 		for k := 0; k < 8; k++ {
-			fmt.Println()
+			res = append(res, hangMan[0])
 		}
 	} else {
 		for i := 0; i < 8; i++ {
-			finalHangman = finalHangman + hangMan[i+8*(failAttempts-1)] + "\n"
+			res = append(res, hangMan[i+8*(failAttempts-1)])
 		}
 	}
-	return finalHangman
+	return res
 }
 
 func printWord(data HangManData) {

@@ -1,36 +1,95 @@
 package main
 
+//Apres socket
 import (
 	"fmt"
-	"html/template"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/sessions"
 	"net/http"
+	"text/template"
 )
 
-func main() {
-	menuScreen()
+type formDisp struct {
+	PlayerDisp []string
+	PlayerList []string
+}
+
+type WebPage struct {
+	PlayerName string
+	GameUData  UserData
+	Form       formDisp
+	PlayerList []string
+	Admin      bool
+}
+
+type UserData struct {
+	uid      interface{}
+	userData HangManData
+	userName string
+	admin    bool
+	finish   bool
+	turn     bool
+	inGame   bool
+}
+
+type MultiplayerData struct {
+	Users    []UserData
+	UserList []string
+	GameData HangManData
+	Started  bool
+	Mode     string
+	Turn     string
 }
 
 var (
-	GameData = setup("./assets/words/words.txt", "./assets/standard.txt")
+	usernames       = []string{"Master Chief", "Steve", "Kratos"}
+	multiplayerData = MultiplayerData{}
+	playerList      []string
+	dictPlayer      = map[interface{}]UserData{}
+	key             = []byte("clef super secrete")
+	store           = sessions.NewCookieStore(key)
+	dictTurn        = map[int]bool{}
+	uidList         = []int{}
 )
 
-func menuScreen() {
-	fs := http.FileServer(http.Dir("assets/web/css"))
-	http.Handle("/css/", http.StripPrefix("/css/", fs))
-	http.HandleFunc("/", gamePage)
-	fmt.Println("(http://localhost:80) - Server started on port 80")
-	http.ListenAndServe(":80", nil)
+func displayPage(w http.ResponseWriter, r *http.Request) {
+
+	session, _ := store.Get(r, "cookie-name")
+	UData := dictPlayer[session.Values["uid"]]
+	data := WebPage{
+		PlayerName: UData.userName,
+		GameUData:  UData,
+		PlayerList: playerList,
+	}
+	if !multiplayerData.Started {
+		tmpl := template.Must(template.ParseFiles("assets/web/game.html"))
+		formFunc(*r, w, data)
+		data.GameUData = dictPlayer[data.GameUData.uid]
+		tmpl.Execute(w, data)
+	} else {
+		data.GameUData = dictPlayer[data.GameUData.uid]
+		switch multiplayerData.Mode {
+		case "versus":
+			versus(w, r)
+		case "coop":
+			fmt.Println("Coop")
+		case "solo":
+			gamePage(w, r, &data.GameUData)
+		}
+		dictPlayer[data.GameUData.uid] = data.GameUData
+	}
 }
 
-func gamePage(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("assets/web/index.html"))
-	if r.FormValue("letter") != "" {
-		if isGood(GameData.ToFind, rune(r.FormValue("letter")[0])) {
-			GameData = trys(GameData, rune(r.FormValue("letter")[0]))
-		} else {
-			GameData.Attempts++
-			GameData.HangManState = printHangMan(GameData.Attempts)
-		}
-	}
-	tmpl.Execute(w, GameData)
+func main() {
+	//hub := newHub() //Creation et
+	//go hub.run()    //lancement du hub
+	fs := http.FileServer(http.Dir("static"))
+	http.Handle("/", fs)
+
+	http.HandleFunc("/ws", handleConnections)
+	http.HandleFunc("/", onConnect)
+	/*http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+		serveWs(hub, w, r)
+	})*/
+	http.ListenAndServe(":8080", nil)
 }

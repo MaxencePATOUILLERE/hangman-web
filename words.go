@@ -7,9 +7,10 @@ import (
 	"time"
 )
 
-func getFileWords() string {
-	f, err := os.Open("./assets/words/words.txt")
+func getFileWords(path string) string {
+	f, err := os.Open(path)
 	if err != nil {
+		println("Error in getFileWord")
 		return ""
 	}
 	scanner := bufio.NewScanner(f)

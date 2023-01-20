@@ -1,23 +1,17 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <link rel="stylesheet" type="text/css" href="index.css" />
     <title>Hangman Web</title>
 </head>
 <body>
     <div id="core" class="center">
-        <h2>Hangman Web</h2>
+        <h2>Hangman Web Login</h2>
         <br>
-        {{if eq .Attempts 10}}
-        <h4>You failed</h4>
-        {{else}}
-        <h4>{{if ne .Word .ToFind}}{{.Word}}{{else}}Congrats !{{end}}</h4>
-        <p>{{.HangManState}}</p>
         <form method="POST">
-            <input type="text" name="letter"><br>
-            <button value="submit" >Try</button>
+            <input type="text" name="username"><br>
+            <button value="submit">Try</button>
         </form>
-        {{end}}
     </div>
 </body>
 </html>
