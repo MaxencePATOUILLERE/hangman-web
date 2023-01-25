@@ -49,9 +49,7 @@ func handleWebSocketMulti(w http.ResponseWriter, r *http.Request) {
 			}
 			genHiddenData()
 			changePlayerTurn()
-			}
 			broadCastState()
-
 		}
 	}
 }
