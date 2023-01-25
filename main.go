@@ -51,8 +51,8 @@ func reset() {
 }
 
 func main() {
-	fs := http.FileServer(http.Dir("./assets/web"))
-	http.Handle("/web/", http.StripPrefix("/web/", fs))
+	fi := http.FileServer(http.Dir("./assets/web/"))
+	http.Handle("/web/", http.StripPrefix("/web/", fi))
 
 	http.HandleFunc("/multi/ws", handleWebSocketMulti)
 	http.HandleFunc("/multi", func(w http.ResponseWriter, r *http.Request) {
