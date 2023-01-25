@@ -12,6 +12,7 @@ type HubWebPage struct {
 	PlayerList []string
 	Admin      bool
 	Redirect   string
+	Type       string
 }
 
 type JSONInput struct {
@@ -37,7 +38,7 @@ func handleWebSocketHub(w http.ResponseWriter, r *http.Request) {
 
 		// Print the message to the console
 		log.Print(session.Values["uid"], string(msg))
-		genHubWebPage("")
+		genHubWebPage()
 		broadcastHub()
 		//Insert Form Get Request
 		dat := JSONInput{}
@@ -46,18 +47,16 @@ func handleWebSocketHub(w http.ResponseWriter, r *http.Request) {
 		mode, difficulty := dat.Mode, dat.Difficulty
 		fmt.Println(mode, difficulty)
 		//End
-		if string(msg) != "" && string(msg) != ": AskInfoSend" {
+		if string(msg) != "" && string(msg) != " AskInfoSend" {
 			if mode == "multi" {
 				GData = generateGamesDatas(difficulty)
-				genHubWebPage(mode)
-				broadcastHub()
+				redirectToUrl("multi")
 				conn.Close()
 			} else if mode == "solo" {
 				temp := dictPlayer[session.Values["uid"].(int)]
 				temp.userData = generateGamesDatas(difficulty)
 				dictPlayer[session.Values["uid"].(int)] = temp
-				datas, _ := json.Marshal(HubWebPage{PlayerList: playerList, Admin: dictPlayer[session.Values["uid"].(int)].admin, Redirect: mode})
-				conn.WriteMessage(1, datas)
+				redirectToUrl("solo")
 				conn.Close()
 			}
 		}
@@ -74,12 +73,20 @@ func generateGamesDatas(difficulty string) HangManData {
 	case "medium":
 		wl = formatWord(getFileWords("assets/words/words2.txt"))
 	}
-	return HangManData{Attempts: 0, ToFind: wl, Used: []rune{}, Word: genHidden(wl)}
+	HData := reveal(HangManData{Attempts: 0, ToFind: wl, Used: []rune{}, Word: genHidden(wl)})
+	return HData
 }
 
-func genHubWebPage(redir string) {
+func genHubWebPage() {
 	for uid, _ := range connListHub {
-		webPageMapHub[uid] = HubWebPage{PlayerList: playerList, Admin: dictPlayer[uid].admin, Redirect: redir}
+		webPageMapHub[uid] = HubWebPage{PlayerList: playerList, Admin: dictPlayer[uid].admin, Type: "datas"}
+	}
+}
+
+func redirectToUrl(redir string) {
+	for _, conn := range connListHub {
+		datas, _ := json.Marshal(HubWebPage{Redirect: redir, Type: "redirect"})
+		conn.WriteMessage(1, datas)
 	}
 }
 

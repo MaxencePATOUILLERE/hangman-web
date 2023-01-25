@@ -40,16 +40,15 @@
     };
 
     socket.onmessage = function (e) {
-        var objet = JSON.parse(e.data);
-        if (objet.Redirect != ""){
-            socket.close();
-            document.location.href="/"+objet.Redirect;
+        var obj = JSON.parse(e.data);
+        if (obj.Type == "redirect"){
+            document.location.href="/"+obj.Redirect;
+        }else if (obj.Type == "datas")  {
+            if (!obj.Admin){
+                adminF.style.visibility = "hidden";
+            }
+            playerList.innerHTML = obj.PlayerList;
         }
-        if (!objet.Admin){
-            adminF.style.visibility = "hidden";
-        }
-
-        playerList.innerHTML = objet.PlayerList;
     };
 
     function sendSolo() {
