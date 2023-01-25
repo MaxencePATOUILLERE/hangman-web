@@ -18,13 +18,6 @@ func reveal(data HangManData) HangManData {
 	return data
 }
 
-func isValid(l rune) bool {
-	if l >= 'A' && l <= 'Z' || l >= 'a' && l <= 'z' {
-		return true
-	}
-	return false
-}
-
 func finish(data HangManData) bool {
 	if data.Word == data.ToFind {
 		return true

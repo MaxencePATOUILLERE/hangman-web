@@ -9,9 +9,10 @@
 <h1>Multiplayer</h1>
 <p id="turn"></p>
 <input id="input" type="text" />
-<button onclick="send()">Send</button>
+<button id="button" onclick="send()">Send</button>
 <p id="letters">Used letters : </p>
 <p id="word"></p>
+<p id="result"></p>
 <script>
     var playerTurn = document.getElementById("turn");
     var input = document.getElementById("input");
@@ -41,6 +42,16 @@
             playerTurn.innerHTML = "Your turn";
         }else{
             playerTurn.innerHTML = "Opponent turn";
+        }
+        if (obj.Finish){
+            input.style.visibility = "hidden";
+            document.getElementById("button").style.visibility = "hidden";
+            if (!obj.Turn){
+                document.getElementById("result").innerHTML = "You win !";
+            }else{
+                document.getElementById("result").innerHTML = "You lose !";
+            }
+
         }
     };
 

@@ -48,7 +48,7 @@ func handleWebSocketHub(w http.ResponseWriter, r *http.Request) {
 		//End
 		if string(msg) != "" && string(msg) != ": AskInfoSend" {
 			if mode == "multi" {
-				gameData = generateGamesDatas(difficulty)
+				GData = generateGamesDatas(difficulty)
 				genHubWebPage(mode)
 				broadcastHub()
 				conn.Close()
@@ -60,9 +60,7 @@ func handleWebSocketHub(w http.ResponseWriter, r *http.Request) {
 				conn.WriteMessage(1, datas)
 				conn.Close()
 			}
-			println(gameData.ToFind, gameData.Word)
 		}
-
 	}
 }
 

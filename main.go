@@ -34,6 +34,22 @@ var (
 	}
 )
 
+func reset() {
+	playerList = []string{}
+	dictPlayer = map[int]UserData{}
+
+	GData = HangManData{}
+	multiplayerData = MultiplayerData{}
+	webPageMapMulti = map[int]GameWebPageMulti{}
+	connListMulti = map[int]*websocket.Conn{}
+
+	webPageMapSolo = map[int]GameWebPageSolo{}
+	connListSolo = map[int]*websocket.Conn{}
+
+	connListHub = map[int]*websocket.Conn{}
+	webPageMapHub = map[int]HubWebPage{}
+}
+
 func main() {
 	http.HandleFunc("/multi/ws", handleWebSocketMulti)
 	http.HandleFunc("/multi", func(w http.ResponseWriter, r *http.Request) {

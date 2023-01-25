@@ -14,16 +14,16 @@ type MultiplayerData struct {
 }
 
 type GameWebPageMulti struct {
-	Word string
-	Used []rune
-	Turn bool
+	Word   string
+	Used   []rune
+	Turn   bool
+	Finish bool
 }
 
 var (
-	GData           = HangManData{Attempts: 0, ToFind: "test", Word: "____", Used: []rune{}}
+	GData           = HangManData{}
 	multiplayerData = MultiplayerData{}
 	webPageMapMulti = map[int]GameWebPageMulti{}
-	gameData        = HangManData{}
 	connListMulti   = map[int]*websocket.Conn{}
 )
 
@@ -33,7 +33,7 @@ func handleWebSocketMulti(w http.ResponseWriter, r *http.Request) {
 	connListMulti[session.Values["uid"].(int)] = conn
 	for {
 		// Read message from browser
-		msgType, msg, err := conn.ReadMessage()
+		_, msg, err := conn.ReadMessage()
 		if err != nil {
 			log.Println(err)
 			return
@@ -44,9 +44,13 @@ func handleWebSocketMulti(w http.ResponseWriter, r *http.Request) {
 
 		if multiplayerData.Turn == session.Values["uid"] && string(msg) != "" {
 			GData = trys(GData, rune(string(msg)[0]))
+			if string(msg) == GData.ToFind {
+				GData.Word = string(msg)
+			}
 			genHiddenData()
 			changePlayerTurn()
-			broadCastState(msgType)
+			}
+			broadCastState()
 
 		}
 	}
@@ -55,11 +59,11 @@ func handleWebSocketMulti(w http.ResponseWriter, r *http.Request) {
 func genHiddenData() {
 	for uid, _ := range connListMulti {
 		turn := multiplayerData.Turn != uid
-		webPageMapMulti[uid] = GameWebPageMulti{Used: GData.Used, Word: GData.Word, Turn: turn}
+		webPageMapMulti[uid] = GameWebPageMulti{Used: GData.Used, Word: GData.Word, Turn: turn, Finish: finish(GData)}
 	}
 }
 
-func broadCastState(msgT int) {
+func broadCastState() {
 	for uid, con := range connListMulti {
 		datas, err := json.Marshal(webPageMapMulti[uid])
 		println(uid, string(datas))
@@ -67,7 +71,7 @@ func broadCastState(msgT int) {
 			log.Println("Erreur : ", err)
 		}
 		log.Println("Good : ", string(datas))
-		err = con.WriteMessage(msgT, datas)
+		err = con.WriteMessage(1, datas)
 		if err != nil {
 			log.Println("Erreur : ", err)
 		}
