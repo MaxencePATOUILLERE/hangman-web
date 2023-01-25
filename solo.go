@@ -15,7 +15,7 @@ var (
 
 type GameWebPageSolo struct {
 	Word     string
-	Used     []rune
+	Used     string
 	Attempts int
 	Finish   bool
 }
@@ -33,7 +33,7 @@ func handleWebSocketSolo(w http.ResponseWriter, r *http.Request) {
 
 		// Print the message to the console
 		log.Print(session.Values["uid"], string(msg))
-		if string(msg) != "" {
+		if string(msg) != "" && string(msg) != ": AskInfoSend" {
 			temp := dictPlayer[session.Values["uid"].(int)]
 			if len(string(msg)) == 1 {
 				if !isGood(temp.userData.ToFind, rune(string(msg)[0])) {
@@ -53,7 +53,7 @@ func handleWebSocketSolo(w http.ResponseWriter, r *http.Request) {
 func genWebData(session *sessions.Session) {
 	for uid, _ := range connListSolo {
 		datas := dictPlayer[session.Values["uid"].(int)].userData
-		webPageMapSolo[uid] = GameWebPageSolo{Used: datas.Used, Word: datas.Word, Attempts: datas.Attempts, Finish: finish(datas)}
+		webPageMapSolo[uid] = GameWebPageSolo{Used: string(datas.Used), Word: datas.Word, Attempts: datas.Attempts, Finish: finish(datas)}
 	}
 }
 

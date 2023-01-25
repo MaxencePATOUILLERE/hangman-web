@@ -42,7 +42,7 @@ func handleWebSocketMulti(w http.ResponseWriter, r *http.Request) {
 		// Print the message to the console
 		log.Print(session.Values["uid"], string(msg))
 
-		if multiplayerData.Turn == session.Values["uid"] && string(msg) != "" {
+		if multiplayerData.Turn == session.Values["uid"] && string(msg) != "" && string(msg) != ": AskInfoSend" {
 			GData = trys(GData, rune(string(msg)[0]))
 			if string(msg) == GData.ToFind {
 				GData.Word = string(msg)
