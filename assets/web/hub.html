@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hangman</title>
+</head>
+<body>
+<!-- websockets.html -->
+<p id="status"></p>
+<p id="playerList"></p>
+<div id="adminFields">
+    <form method="POST">
+        <select id="difficulty">
+            <option value="">Choose Difficulty</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+        <button id="solobutton" onclick="sendSolo()">Solo</button>
+        <button id="multibutton" onclick="sendMulti()" action="multi">Multi</button>
+    </form>
+</div>
+<script>
+    var playerList = document.getElementById("playerList");
+    var adminF = document.getElementById("adminFields");
+    var socket = new WebSocket("ws://localhost:8080/ws");
+    var soloButton = document.getElementById("solobutton");
+    var multiButton = document.getElementById("multibutton");
+
+    socket.onopen = function () {
+        console.log("Status: Connected\n");
+        document.getElementById("status").innerHTML = "Connected";
+        socket.send(": AskInfoSend");
+    };
+
+    socket.onclose = function(){
+        console.log("Status: disconected\n");
+        socket.close();
+        document.getElementById("status").innerHTML = "Disconnected";
+    };
+
+    socket.onmessage = function (e) {
+        var objet = JSON.parse(e.data);
+        if (objet.Redirect != ""){
+            socket.close();
+            document.location.href="/"+objet.Redirect;
+        }
+        if (!objet.Admin){
+            adminF.style.visibility = "hidden";
+        }
+
+        playerList.innerHTML = objet.PlayerList;
+    };
+
+    function sendSolo() {
+        //socket.send(document.getElementById("difficulty").value);
+        socket.send(JSON.stringify({"Difficulty":document.getElementById("difficulty").value, "Mode":"solo"}))
+    }
+
+    function sendMulti() {
+        //socket.send(document.getElementById("difficulty").value);
+        socket.send(JSON.stringify({"Difficulty":document.getElementById("difficulty").value, "Mode":"multi"}))
+    }
+</script>
+</body>
+</html>

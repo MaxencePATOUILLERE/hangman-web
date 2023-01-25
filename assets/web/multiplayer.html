@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hangman</title>
+</head>
+<body>
+<!-- websockets.html -->
+<p id="status"></p>
+<h1>Multiplayer</h1>
+<p id="turn"></p>
+<input id="input" type="text" />
+<button onclick="send()">Send</button>
+<p id="letters">Used letters : </p>
+<p id="word"></p>
+<script>
+    var playerTurn = document.getElementById("turn");
+    var input = document.getElementById("input");
+    var cword = document.getElementById("word");
+    let letter = document.getElementById("letters");
+    const socket = new WebSocket("ws://localhost:8080/multi/ws");
+
+
+    socket.onopen = function () {
+        console.log("Status: Connected\n");
+        document.getElementById("status").innerHTML = "Connected";
+        socket.send(": AskInfoSend");
+
+    };
+
+    socket.onclose = function(){
+        console.log("Status: Disconected\n");
+        document.getElementById("status").innerHTML = "Disconnected";
+        alert("Status: Disconected");
+    };
+
+    socket.onmessage = function (e) {
+        var obj = JSON.parse(e.data);
+        letter.innerHTML = "Used letters : "+ obj.Used;
+        cword.innerHTML = obj.Word;
+        if (obj.Turn){
+            playerTurn.innerHTML = "Your turn";
+        }else{
+            playerTurn.innerHTML = "Opponent turn";
+        }
+    };
+
+    socket.onerror = error => {
+        console.log("Socket Error: ", error);
+    };
+
+    function send() {
+        socket.send(input.value);
+        input.value = "";
+    };
+</script>
+</body>
+</html>
