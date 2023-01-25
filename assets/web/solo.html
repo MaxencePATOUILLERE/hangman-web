@@ -2,15 +2,23 @@
 <html>
 <head>
   <title>Hangman</title>
-  <link href="./css/solo.css" rel="stylesheet">
+  <link href="http://localhost:8080/web/css/solo.css" rel="stylesheet">
 </head>
 <body>
 <!-- websockets.html -->
 <h1>Solo mode</h1>
-<p id="status"></p>
-<p id="attempts"></p>
-<input id="input" type="text"/>
-<button id="button" onclick="send()">Send</button>
+<div id="status_block">
+  <p id="status"></p>
+  <img id="connect_img" src="">
+</div>
+<div id="attempts_block">
+  <p id="attempts"></p>
+  <p id="mort">mort</p>
+</div>
+<div id="input_block">
+  <input id="input" type="text"/>
+  <button id="button" onclick="send()">Send</button>
+</div>
 <p id="letters">Used letters : </p>
 <p id="word"></p>
 <script>
@@ -29,12 +37,14 @@
   socket.onopen = function () {
     console.log("Status: Connected\n");
     document.getElementById("status").innerHTML = "Connected";
+    document.getElementById("connect_img").src = "http://localhost:8080/web/images/connected.png";
     socket.send(": AskInfoSend")
   };
 
   socket.onclose = function(){
     console.log("Status: Disconected\n");
     document.getElementById("status").innerHTML = "Disconnected";
+    document.getElementById("connect_img").src = "http://localhost:8080/web/images/unconnected.png";
     alert("Status: Disconected")
   };
 

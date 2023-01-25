@@ -1,0 +1,65 @@
+@font-face {
+    font-family: 'AmongUs';
+    src: url('http://localhost:8080/web/fonts/Impostograph-Regular.ttf') format('truetype');
+}
+body{
+    background-image: url("http://localhost:8080/web/images/SOLO_BACKGROUND.png");
+}
+/* MULTIPLE */
+#status, #connect_img{
+    display:inline-block;
+}
+#button, #input{
+    font-family: AmongUs;
+    font-size: 40px;
+}
+#attempts, #mort{
+    font-family: AmongUs, Serif;
+    display:inline-block;
+    color: red;
+    font-size: 40px;
+}
+
+/* BLOCK */
+#status_block{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 20px;
+}
+#attempts_block{
+    text-align: center;
+}
+#input_block{
+    text-align: center;
+}
+
+/* UNIQUE */
+h1{
+    font-family: AmongUs, Serif;
+    font-size: 150px;
+    color: lightskyblue;
+    text-align: center;
+    margin-bottom: 0;
+}
+#status{
+    font-family: AmongUs, Serif;
+    font-size: 30px;
+    color: white;
+}
+#connect_img{
+    max-width: 30px;
+    height: auto;
+}
+#letters{
+    font-family: AmongUs, Serif;
+    color: white;
+    text-align: center;
+    font-size: 40px;
+}
+#word{
+    font-family: AmongUs, Serif;
+    color: white;
+    text-align: center;
+    font-size: 40px;
+}
