@@ -2,9 +2,11 @@
     font-family: 'AmongUs';
     src: url('http://localhost:8080/web/fonts/Impostograph-Regular.ttf') format('truetype');
 }
-body{
-    background-image: url("http://localhost:8080/web/images/SOLO_BACKGROUND.png");
+@font-face {
+    font-family: 'VCR';
+    src: url("http://localhost:8080/web/fonts/VCR_OSD_MONO_1.001.ttf");
 }
+
 /* MULTIPLE */
 #status, #connect_img{
     display:inline-block;
@@ -14,13 +16,17 @@ body{
     font-size: 40px;
 }
 #attempts, #mort{
-    font-family: AmongUs, Serif;
+    font-family: VCR, Serif;
     display:inline-block;
     color: red;
     font-size: 40px;
 }
 
 /* BLOCK */
+body{
+    background-image: url("http://localhost:8080/web/images/SOLO_BACKGROUND.png");
+}
+
 #status_block{
     position: absolute;
     top: 0;
@@ -36,29 +42,29 @@ body{
 
 /* UNIQUE */
 h1{
-    font-family: AmongUs, Serif;
-    font-size: 150px;
+    font-family: VCR, Serif;
+    font-size: 100px;
     color: lightskyblue;
     text-align: center;
     margin-bottom: 0;
 }
 #status{
-    font-family: AmongUs, Serif;
-    font-size: 30px;
+    font-family: VCR, Serif;
+    font-size: 25px;
     color: white;
 }
 #connect_img{
-    max-width: 30px;
+    max-width: 25px;
     height: auto;
 }
 #letters{
-    font-family: AmongUs, Serif;
+    font-family: VCR, Serif;
     color: white;
     text-align: center;
     font-size: 40px;
 }
 #word{
-    font-family: AmongUs, Serif;
+    font-family: VCR, Serif;
     color: white;
     text-align: center;
     font-size: 40px;
