@@ -19,6 +19,12 @@
   var att = document.getElementById("attempts");
   var socket = new WebSocket("ws://localhost:8080/solo/ws");
 
+  input.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+      send();
+    }
+  });
+
   socket.onopen = function () {
     console.log("Status: Connected\n");
     document.getElementById("status").innerHTML = "Connected";
