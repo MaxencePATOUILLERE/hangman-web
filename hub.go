@@ -47,7 +47,11 @@ func handleWebSocketHub(w http.ResponseWriter, r *http.Request) {
 		mode, difficulty := dat.Mode, dat.Difficulty
 		fmt.Println(mode, difficulty)
 		//End
-		if string(msg) != "" && string(msg) != " AskInfoSend" {
+		if string(msg) == ": AskInfoSend"{
+			genWebData(session)
+			temp, _ := json.Marshal(webPageMapHub[session.Values["uid"].(int)])
+			conn.WriteMessage(1, temp)
+		}else if string(msg) != ""  {
 			if mode == "multi" {
 				GData = generateGamesDatas(difficulty)
 				redirectToUrl("multi")
