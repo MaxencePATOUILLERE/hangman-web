@@ -30,7 +30,6 @@ func handleWebSocketSolo(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return
 		}
-
 		// Print the message to the console
 		log.Print(session.Values["uid"], string(msg))
 		if string(msg) != "" && string(msg) != ": AskInfoSend" {
@@ -60,14 +59,13 @@ func genWebData(session *sessions.Session) {
 func broadCastStateSolo() {
 	for uid, con := range connListSolo {
 		datas, err := json.Marshal(webPageMapSolo[uid])
-		println(uid, string(datas))
+		log.Println(uid, string(datas))
 		if err != nil {
-			log.Println("Erreur : ", err)
+			log.Println(err)
 		}
-		log.Println("Good : ", string(datas))
 		err = con.WriteMessage(1, datas)
 		if err != nil {
-			log.Println("Erreur : ", err)
+			log.Println(err)
 		}
 	}
 }
