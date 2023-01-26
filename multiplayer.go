@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
@@ -15,9 +14,11 @@ type MultiplayerData struct {
 
 type GameWebPageMulti struct {
 	Word   string
-	Used   []rune
+	Used   string
 	Turn   bool
 	Finish bool
+	Type string
+	Redirect string
 }
 
 var (
@@ -29,10 +30,7 @@ var (
 
 func handleWebSocketMulti(w http.ResponseWriter, r *http.Request) {
 	session, _ := store.Get(r, "cookie-name")
-	if !presentInConnList(session.Values["uid"].(int), connListMulti){
-		fmt.Fprintf(w,"You are not in game")
-		return
-	}
+
 	conn, _ := upgrader.Upgrade(w, r, nil) // error ignored for sake of simplicity
 	connListMulti[session.Values["uid"].(int)] = conn
 	for {
@@ -47,13 +45,15 @@ func handleWebSocketMulti(w http.ResponseWriter, r *http.Request) {
 		if string(msg) == ": AskInfoSend" {
 			genHiddenData()
 			broadCastState()
+		}else if string(msg) == ": ResetRequest"{
+			resetMultiplayer()
 		}else if multiplayerData.Turn == session.Values["uid"] && string(msg) != "" {
 			GData = trys(GData, rune(string(msg)[0]))
 			if string(msg) == GData.ToFind {
 				GData.Word = string(msg)
 			}
-			genHiddenData()
 			changePlayerTurn()
+			genHiddenData()
 			broadCastState()
 		}
 	}
@@ -62,7 +62,7 @@ func handleWebSocketMulti(w http.ResponseWriter, r *http.Request) {
 func genHiddenData() {
 	for uid, _ := range connListMulti {
 		turn := multiplayerData.Turn != uid
-		webPageMapMulti[uid] = GameWebPageMulti{Used: GData.Used, Word: GData.Word, Turn: turn, Finish: finish(GData)}
+		webPageMapMulti[uid] = GameWebPageMulti{Used: string(GData.Used), Word: GData.Word, Turn: turn, Finish: finish(GData), Type: "datas"}
 	}
 }
 
@@ -82,20 +82,22 @@ func broadCastState() {
 }
 
 func changePlayerTurn() {
-	fmt.Println(multiplayerData.Turn)
-	for i := 0; i < len(multiplayerData.Users); i++ {
+ 	for i := 0; i < len(multiplayerData.Users); i++ {
 		if multiplayerData.Users[i] == multiplayerData.Turn {
 			if i == len(multiplayerData.Users)-1 {
-				fmt.Println("Previous : ", dictPlayer[multiplayerData.Users[i]].userName, " Current : ", dictPlayer[multiplayerData.Users[0]].userName)
 				multiplayerData.Turn = multiplayerData.Users[0]
-				fmt.Println(dictPlayer[multiplayerData.Turn].userName, "'s turn")
 				return
 			} else {
-				fmt.Println("Previous : ", dictPlayer[multiplayerData.Users[i]].userName, " Current : ", dictPlayer[multiplayerData.Users[i+1]].userName)
 				multiplayerData.Turn = multiplayerData.Users[i+1]
-				fmt.Println(dictPlayer[multiplayerData.Turn].userName, "'s turn")
 				return
 			}
 		}
 	}
+}
+
+func resetMultiplayer(){
+	redirectToUrl(".", connListMulti)
+	GData           = HangManData{}
+	webPageMapMulti = map[int]GameWebPageMulti{}
+	connListMulti   = map[int]*websocket.Conn{}
 }

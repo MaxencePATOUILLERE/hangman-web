@@ -13,6 +13,7 @@
 <p id="letters">Used letters : </p>
 <p id="word"></p>
 <p id="result"></p>
+<button id="reset" style="visibility: hidden;" onclick="sendResetRequest()">reset</button>
 <script>
     var playerTurn = document.getElementById("turn");
     var input = document.getElementById("input");
@@ -31,27 +32,31 @@
     socket.onclose = function(){
         console.log("Status: Disconected\n");
         document.getElementById("status").innerHTML = "Disconnected";
-        alert("Status: Disconected");
     };
 
     socket.onmessage = function (e) {
         var obj = JSON.parse(e.data);
-        letter.innerHTML = "Used letters : "+ obj.Used;
-        cword.innerHTML = obj.Word;
-        if (obj.Turn){
-            playerTurn.innerHTML = "Your turn";
-        }else{
-            playerTurn.innerHTML = "Opponent turn";
-        }
-        if (obj.Finish){
-            input.style.visibility = "hidden";
-            document.getElementById("button").style.visibility = "hidden";
-            if (!obj.Turn){
-                document.getElementById("result").innerHTML = "You win !";
+        console.log(obj);
+        if (obj.Type == "redirect"){
+            document.location.href="/"+obj.Redirect;
+        }else if (obj.Type == "datas")  {
+            letter.innerHTML = "Used letters : "+ obj.Used;
+            cword.innerHTML = obj.Word;
+            if (obj.Turn){
+                playerTurn.innerHTML = "Opponent turn";
             }else{
-                document.getElementById("result").innerHTML = "You lose !";
+                playerTurn.innerHTML = "Your turn";
             }
-
+            if (obj.Finish){
+                input.style.visibility = "hidden";
+                document.getElementById("button").style.visibility = "hidden";
+                document.getElementById("reset").style.visibility = "visible";
+                if (!obj.Turn){
+                    document.getElementById("result").innerHTML = "You win !";
+                }else{
+                    document.getElementById("result").innerHTML = "You lose !";
+                }
+            }
         }
     };
 
@@ -63,6 +68,11 @@
         socket.send(input.value);
         input.value = "";
     };
+
+    function sendResetRequest(){
+        socket.send(": ResetRequest");
+
+    }
 </script>
 </body>
 </html>

@@ -45,7 +45,6 @@
     console.log("Status: Disconected\n");
     document.getElementById("status").innerHTML = "Disconnected";
     document.getElementById("connect_img").src = "http://localhost:8080/web/images/unconnected.png";
-    alert("Status: Disconected")
   };
 
   socket.onmessage = function (e) {

@@ -49,18 +49,17 @@ func handleWebSocketHub(w http.ResponseWriter, r *http.Request) {
 		//End
 		if string(msg) == ": AskInfoSend"{
 			genWebData(session)
-			temp, _ := json.Marshal(webPageMapHub[session.Values["uid"].(int)])
-			conn.WriteMessage(1, temp)
+			broadcastHub()
 		}else if string(msg) != ""  {
 			if mode == "multi" {
 				GData = generateGamesDatas(difficulty)
-				redirectToUrl("multi")
+				redirectToUrl("multi", connListHub)
 				conn.Close()
 			} else if mode == "solo" {
 				temp := dictPlayer[session.Values["uid"].(int)]
 				temp.userData = generateGamesDatas(difficulty)
 				dictPlayer[session.Values["uid"].(int)] = temp
-				redirectToUrl("solo")
+				redirectToUrl("solo", connListHub)
 				conn.Close()
 			}
 		}
@@ -87,9 +86,10 @@ func genHubWebPage() {
 	}
 }
 
-func redirectToUrl(redir string) {
-	for _, conn := range connListHub {
+func redirectToUrl(redir string, connList map[int]*websocket.Conn) {
+	for _, conn := range connList {
 		datas, _ := json.Marshal(HubWebPage{Redirect: redir, Type: "redirect"})
+		log.Print(string(datas))
 		conn.WriteMessage(1, datas)
 	}
 }
