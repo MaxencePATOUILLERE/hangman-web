@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/gorilla/websocket"
 	"github.com/gorilla/sessions"
 	"math/rand"
 	"net/http"
@@ -10,6 +11,7 @@ import (
 
 func onConnect(w http.ResponseWriter, r *http.Request) {
 	session, _ := store.Get(r, "cookie-name")
+	println(isAlreadyAuth(session))
 	if session.Values["uid"] != nil {
 		haveAlreadyCookie(session)
 		return
@@ -54,4 +56,20 @@ func haveAlreadyCookie(session *sessions.Session) {
 	}
 	multiplayerData.Turn = uid
 	playerList = append(playerList, usernames[len(playerList)])
+}
+
+func isAlreadyAuth(session *sessions.Session) bool {
+	if session.Values["uid"] != nil{
+		return true
+	}
+	return false
+}
+
+func presentInConnList(uid int, connList map[int]*websocket.Conn) bool {
+	for key, _ := range connList {
+		if key == uid {
+			return true
+		}
+	}
+	return false
 }

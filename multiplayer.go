@@ -29,6 +29,10 @@ var (
 
 func handleWebSocketMulti(w http.ResponseWriter, r *http.Request) {
 	session, _ := store.Get(r, "cookie-name")
+	if !presentInConnList(session.Values["uid"].(int), connListMulti){
+		fmt.Fprintf(w,"You are not in game")
+		return
+	}
 	conn, _ := upgrader.Upgrade(w, r, nil) // error ignored for sake of simplicity
 	connListMulti[session.Values["uid"].(int)] = conn
 	for {
@@ -40,7 +44,10 @@ func handleWebSocketMulti(w http.ResponseWriter, r *http.Request) {
 		}
 		// Print the message to the console
 		log.Print(session.Values["uid"], string(msg))
-		if multiplayerData.Turn == session.Values["uid"] && string(msg) != "" && string(msg) != ": AskInfoSend" {
+		if string(msg) == ": AskInfoSend" {
+			genHiddenData()
+			broadCastState()
+		}else if multiplayerData.Turn == session.Values["uid"] && string(msg) != "" {
 			GData = trys(GData, rune(string(msg)[0]))
 			if string(msg) == GData.ToFind {
 				GData.Word = string(msg)
