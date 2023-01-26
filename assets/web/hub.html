@@ -6,7 +6,13 @@
 </head>
 <body>
 <!-- websockets.html -->
-<p id="status"></p>
+<div id="block_HangmanUs">
+    <h1 id="HANGMAN_US">hAngmAn us</h1>
+</div>
+<div id="status_block">
+    <p id="status"></p>
+    <img id="connect_img" src="">
+</div>
 <p id="playerList"></p>
 <div id="adminFields">
     <form method="POST">
@@ -30,6 +36,7 @@
     socket.onopen = function () {
         console.log("Status: Connected\n");
         document.getElementById("status").innerHTML = "Connected";
+        document.getElementById("connect_img").src = "http://localhost:8080/web/images/connected.png";
         socket.send(": AskInfoSend");
     };
 
@@ -37,6 +44,7 @@
         console.log("Status: disconected\n");
         socket.close();
         document.getElementById("status").innerHTML = "Disconnected";
+        document.getElementById("connect_img").src = "http://localhost:8080/web/images/unconnected.png";
     };
 
     socket.onmessage = function (e) {
