@@ -11,9 +11,35 @@
   <p id="status"></p>
   <img id="connect_img" src="">
 </div>
+<div id="among_img">
+  <img src="http://localhost:8080/web/images/all_characters/Banana.png" alt="Image 1">
+  <img src="http://localhost:8080/web/images/all_characters/Black.png" alt="Image 2">
+  <img src="http://localhost:8080/web/images/all_characters/Blue.png" alt="Image 3">
+  <img src="http://localhost:8080/web/images/all_characters/Brown.png" alt="Image 4">
+  <img src="http://localhost:8080/web/images/all_characters/Coral.png" alt="Image 5">
+  <img src="http://localhost:8080/web/images/all_characters/Cyan.png" alt="Image 6">
+  <img src="http://localhost:8080/web/images/all_characters/Gray.png" alt="Image 7">
+  <img src="http://localhost:8080/web/images/all_characters/Green.png" alt="Image 8">
+  <img src="http://localhost:8080/web/images/all_characters/Lime.png" alt="Image 9">
+  <img src="http://localhost:8080/web/images/all_characters/Maroon.png" alt="Image 10">
+</div>
+<div id="animation_block">
+  <img id="background_anim" src="http://localhost:8080/web/images/ANIMATIONS/Emergency-PNG-Image-File.png" style="display: none;">
+</div>
+<div id="gif_block">
+  <img id="gif1" src="http://localhost:8080/web/images/ANIMATIONS/ANIM_1.gif" data-duration="1500" style="display: none;" >
+  <img id="gif2" src="http://localhost:8080/web/images/ANIMATIONS/ANIM_2.gif" data-duration="2000" style="display: none;" >
+  <img id="gif3" src="http://localhost:8080/web/images/ANIMATIONS/ANIM_3.gif" data-duration="5000" style="display: none;" >
+  <img id="gif4" src="http://localhost:8080/web/images/ANIMATIONS/ANIM_4.gif" data-duration="2000" style="display: none;" >
+  <img id="gif5" src="http://localhost:8080/web/images/ANIMATIONS/ANIM_5.gif" data-duration="1700" style="display: none;" >
+  <img id="gif6" src="http://localhost:8080/web/images/ANIMATIONS/ANIM_6.gif" data-duration="3000" style="display: none;" >
+  <img id="gif7" src="http://localhost:8080/web/images/ANIMATIONS/ANIM_7.gif" data-duration="2500" style="display: none;" >
+  <img id="gif8" src="http://localhost:8080/web/images/ANIMATIONS/ANIM_8.gif" data-duration="4000" style="display: none;" >
+  <img id="gif9" src="http://localhost:8080/web/images/ANIMATIONS/ANIM_9.gif" data-duration="4000" style="display: none;" >
+</div>
 <div id="attempts_block">
   <p id="attempts"></p>
-  <p id="mort">mort</p>
+  <p id="mort">tué(s)</p>
 </div>
 <div id="input_block">
   <input id="input" type="text"/>
@@ -22,12 +48,43 @@
 <p id="letters">Used letters : </p>
 <p id="word"></p>
 <button id="reset" style="visibility: hidden;" onclick="sendResetRequest()">reset</button>
+
 <script>
   var input = document.getElementById("input");
   var cword = document.getElementById("word");
   var letter = document.getElementById("letters");
   var att = document.getElementById("attempts");
   var socket = new WebSocket("ws://localhost:8080/solo/ws");
+  var images = document.getElementById("among_img").children;
+  var attempts=0;
+  var bck_anim= document.getElementById("background_anim");
+  var gifs = ["gif1", "gif2", "gif3", "gif4", "gif5", "gif6", "gif7", "gif8", "gif9"];
+
+  function displayRandomGif() {
+    for (var i = 0; i < gifs.length; i++) {
+      document.getElementById(gifs[i]).style.display = "none";
+    }
+    var randomNum = Math.floor(Math.random() * gifs.length);
+    var randomGif = document.getElementById(gifs[randomNum]);
+    var displayCount = 0;
+    var displayDuration = randomGif.getAttribute("data-duration");
+    var intervalId = setInterval(function() {
+      if (displayCount === 2) {
+        clearInterval(intervalId);
+        randomGif.style.display = "none";
+        bck_anim.style.display = "none";
+      } else {
+        bck_anim.style.display= "block";
+        randomGif.style.display = "block";
+        displayCount++;
+      }
+    }, displayDuration);
+  }
+
+  function removeRandomImage() {
+    var randomIndex = Math.floor(Math.random() * images.length);
+    images[randomIndex].remove();
+  }
 
   input.addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
@@ -56,6 +113,12 @@
       letter.innerHTML = "Used letters : " + obj.Used;
       cword.innerHTML = obj.Word;
       att.innerHTML = obj.Attempts;
+      if(attempts != obj.Attempts)
+      {
+        attempts++;
+        displayRandomGif();
+        removeRandomImage();
+      }
       if (obj.Finish) {
         input.style.visibility = "hidden";
         document.getElementById("reset").style.visibility = "visible";

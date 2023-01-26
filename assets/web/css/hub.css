@@ -1,5 +1,46 @@
+@font-face {
+    font-family: 'AmongUs';
+    src: url('http://localhost:8080/web/fonts/Impostograph-Regular.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'VCR';
+    src: url("http://localhost:8080/web/fonts/VCR_OSD_MONO_1.001.ttf");
+}
+
+/* MULTIPLE */
+#status, #connect_img{
+    display:inline-block;
+}
 body{
     background-image: url("http://localhost:8080/web/images/MAIN_MENU.png");
     background-size: cover;
     background-position: center;
+}
+/*BLOCK*/
+#status_block{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 20px;
+}
+#block_HangmanUs{
+    position: absolute;
+    top: 25%;
+    left : 50%;
+    transform: translate(-50%, -50%);
+}
+/*UNIQUE*/
+#HANGMAN_US{
+    font-family: AmongUs, Serif;
+    font-size: 200px;
+    color : white;
+}
+#status{
+    font-family: VCR, Serif;
+    font-size: 25px;
+    color: white;
+}
+#connect_img{
+    max-width: 25px;
+    height: auto;
 }
