@@ -21,6 +21,7 @@
 </div>
 <p id="letters">Used letters : </p>
 <p id="word"></p>
+<button id="reset" style="visibility: hidden;" onclick="sendResetRequest()">reset</button>
 <script>
   var input = document.getElementById("input");
   var cword = document.getElementById("word");
@@ -49,18 +50,27 @@
 
   socket.onmessage = function (e) {
     var obj = JSON.parse(e.data);
-    letter.innerHTML = "Used letters : "+ obj.Used;
-    cword.innerHTML = obj.Word;
-    att.innerHTML = obj.Attempts;
-    if (obj.Finish){
-      input.style.visibility = "hidden";
-      document.getElementById("button").style.visibility = "hidden";
+    if (obj.Type == "redirect"){
+      document.location.href="/"+obj.Redirect;
+    }else if (obj.Type == "datas") {
+      letter.innerHTML = "Used letters : " + obj.Used;
+      cword.innerHTML = obj.Word;
+      att.innerHTML = obj.Attempts;
+      if (obj.Finish) {
+        input.style.visibility = "hidden";
+        document.getElementById("reset").style.visibility = "visible";
+        document.getElementById("button").style.visibility = "hidden";
+      }
     }
   };
 
   function send() {
     socket.send(input.value);
     input.value = "";
+  }
+
+  function sendResetRequest(){
+    socket.send(": ResetRequest");
   }
 </script>
 </body>

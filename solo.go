@@ -18,6 +18,8 @@ type GameWebPageSolo struct {
 	Used     string
 	Attempts int
 	Finish   bool
+	Type string
+	Redirect string
 }
 
 func handleWebSocketSolo(w http.ResponseWriter, r *http.Request) {
@@ -35,6 +37,8 @@ func handleWebSocketSolo(w http.ResponseWriter, r *http.Request) {
 		if string(msg) == ": AskInfoSend" {
 			genWebData(session)
 			broadCastStateSolo()
+		}else if string(msg) == ": ResetRequest"{
+			resetSolo()
 		}else if string(msg) != "" {
 			temp := dictPlayer[session.Values["uid"].(int)]
 			if len(string(msg)) == 1 {
@@ -55,7 +59,7 @@ func handleWebSocketSolo(w http.ResponseWriter, r *http.Request) {
 func genWebData(session *sessions.Session) {
 	for uid, _ := range connListSolo {
 		datas := dictPlayer[session.Values["uid"].(int)].userData
-		webPageMapSolo[uid] = GameWebPageSolo{Used: string(datas.Used), Word: datas.Word, Attempts: datas.Attempts, Finish: finish(datas)}
+		webPageMapSolo[uid] = GameWebPageSolo{Used: string(datas.Used), Word: datas.Word, Attempts: datas.Attempts, Finish: finish(datas), Type: "datas"}
 	}
 }
 
@@ -73,22 +77,8 @@ func broadCastStateSolo() {
 	}
 }
 
-/*func gamePage(w http.ResponseWriter, r *http.Request, UData *UserData) {
-	session, _ := store.Get(r, "cookie-name")
-	tmpl := template.Must(template.ParseFiles("assets/web/soloTempl.html"))
-	if r.FormValue("letter") != "" {
-		if len(r.FormValue("letter")) == 1 && isGood(UData.userData.ToFind, rune(r.FormValue("letter")[0])) {
-			UData.userData = trys(UData.userData, rune(r.FormValue("letter")[0]))
-		} else if len(r.FormValue("letter")) > 1 {
-			UData.userData = guessWord(UData.userData, r.FormValue("letter"))
-		} else {
-			UData.userData.Attempts++
-			UData.userData.HangManState = printHangMan(UData.userData.Attempts)
-		}
-	}
-	if UData.inGame {
-		tmpl.Execute(w, UData.userData)
-	} else {
-		fmt.Fprintf(w, "You are not in the game")
-	}
-}*/
+func resetSolo(){
+	redirectToUrl(".", connListSolo)
+	webPageMapSolo = map[int]GameWebPageSolo{}
+	connListSolo   = map[int]*websocket.Conn{}
+}
