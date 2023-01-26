@@ -52,9 +52,11 @@ func handleWebSocketHub(w http.ResponseWriter, r *http.Request) {
 			broadcastHub()
 		}else if string(msg) != ""  {
 			if mode == "multi" {
-				GData = generateGamesDatas(difficulty)
-				redirectToUrl("multi", connListHub)
-				conn.Close()
+				if (len(playerList) == 2){
+					GData = generateGamesDatas(difficulty)
+					redirectToUrl("multi", connListHub)
+					conn.Close()
+				}
 			} else if mode == "solo" {
 				temp := dictPlayer[session.Values["uid"].(int)]
 				temp.userData = generateGamesDatas(difficulty)
