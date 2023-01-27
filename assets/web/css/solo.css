@@ -8,20 +8,7 @@
 }
 
 /* MULTIPLE */
-#status, #connect_img{
-    display:inline-block;
-}
-#button, #input{
-    font-family: AmongUs;
-    font-size: 35px;
-    text-align: center;
-}
-#attempts, #mort{
-    font-family: VCR, Serif;
-    display:inline-block;
-    color: red;
-    font-size: 40px;
-}
+
 
 /* BLOCK */
 body{
@@ -31,15 +18,64 @@ body{
     background-position: center;
     background-attachment: fixed;
 }
+
+/*STATUS*/
 #status_block{
     position: absolute;
     top: 0;
     right: 0;
     margin-top: 20px;
 }
+#status{
+    font-family: VCR, Serif;
+    font-size: 25px;
+    color: white;
+}
+#connect_img{
+    max-width: 25px;
+    height: auto;
+}
+#status, #connect_img{
+    display:inline-block;
+}
+@media (max-width: 768px) {
+    #status{
+        font-size: 20px;
+    }
+    #connect_img{
+        max-width: 20px;
+    }
+}
+@media (max-width: 480px) {
+    #status{
+        font-size: 15px;
+    }
+    #connect_img{
+        max-width: 15px;
+    }
+}
+
+/*ATTEMPTS*/
 #attempts_block{
     text-align: center;
 }
+#attempts, #mort{
+    font-family: VCR, Serif;
+    display:inline-block;
+    color: red;
+    font-size: 40px;
+}
+@media (max-width: 768px) {
+    #attempts,#mort {
+        font-size: 20px;
+    }
+}
+@media (max-width: 480px) {
+    #attempts,#mort {
+        font-size:20px;
+    }
+}
+/*INPUT*/
 #input_block{
     display: flex;
     align-items: center;
@@ -48,6 +84,13 @@ body{
     max-width: 400px;
     margin: 0 auto;
 }
+#button, #input{
+    font-family: AmongUs;
+    font-size: 35px;
+    text-align: center;
+}
+
+/*AMONG GUYS*/
 #among_img {
     min-width: 900px;
     position: absolute;
@@ -57,7 +100,6 @@ body{
     display: flex;
     flex-wrap: wrap;
 }
-
 #gif_block img{
     max-width: 60%;
     max-height: 60%;
@@ -83,7 +125,7 @@ body{
     margin: 5px;
 }
 
-/* UNIQUE */
+/* NO DIV */
 h1{
     font-family: VCR, Serif;
     font-size: 100px;
@@ -91,14 +133,15 @@ h1{
     text-align: center;
     margin-bottom: 0;
 }
-#status{
-    font-family: VCR, Serif;
-    font-size: 25px;
-    color: white;
+@media (max-width: 768px) {
+    h1 {
+        font-size: 40px;
+    }
 }
-#connect_img{
-    max-width: 25px;
-    height: auto;
+@media (max-width: 480px) {
+    h1 {
+        font-size:40px;
+    }
 }
 #letters{
     font-family: VCR, Serif;
@@ -106,9 +149,61 @@ h1{
     text-align: center;
     font-size: 40px;
 }
+@media (max-width: 768px) {
+    #letters {
+        font-size: 20px;
+    }
+}
+@media (max-width: 480px) {
+    #letters {
+        font-size:20px;
+    }
+}
 #word{
     font-family: VCR, Serif;
     color: white;
     text-align: center;
     font-size: 40px;
+}
+@media (max-width: 768px) {
+    #word {
+        font-size: 20px;
+    }
+}
+@media (max-width: 480px) {
+    #word {
+        font-size:20px;
+    }
+}
+
+/*RESET BUTTON*/
+#reset{
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    background-color: #ff0000;
+    color: #000000;
+    border-radius: 10px;
+    padding: 10px 30px;
+    box-shadow: 2px 2px 5px #bd2424;
+    font-size: 20px;
+    cursor: pointer;
+    font-family: VCR, Serif;
+}
+@media (max-width: 768px) {
+    #reset {
+        top: 25%;
+        font-size: 20px;
+        padding: 4px 13px;
+    }
+}
+@media (max-width: 480px) {
+    #reset {
+        top: 25%;
+        font-size:20px;
+        padding: 4px 13px;
+    }
 }

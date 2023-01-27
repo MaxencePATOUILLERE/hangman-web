@@ -27,7 +27,7 @@
   <img id="background_anim" src="http://localhost:8080/web/images/ANIMATIONS/Emergency-PNG-Image-File.png" style="display: none;">
 </div>
 <div id="gif_block">
-  <img id="gif1" src="http://localhost:8080/web/images/ANIMATIONS/ANIM_1.gif" data-duration="1500" style="display: none;" >
+  <img id="gif1" src="http://localhost:8080/web/images/ANIMATIONS/ANIM_1.gif" data-duration="1000" style="display: none;" >
   <img id="gif2" src="http://localhost:8080/web/images/ANIMATIONS/ANIM_2.gif" data-duration="2000" style="display: none;" >
   <img id="gif3" src="http://localhost:8080/web/images/ANIMATIONS/ANIM_3.gif" data-duration="5000" style="display: none;" >
   <img id="gif4" src="http://localhost:8080/web/images/ANIMATIONS/ANIM_4.gif" data-duration="2000" style="display: none;" >
@@ -47,7 +47,7 @@
 </div>
 <p id="letters">Used letters : </p>
 <p id="word"></p>
-<button id="reset" style="visibility: hidden;" onclick="sendResetRequest()">reset</button>
+<button id="reset" style="visibility: hidden;" onclick="sendResetRequest()">RESET</button>
 
 <script>
   var input = document.getElementById("input");
@@ -69,7 +69,7 @@
     var displayCount = 0;
     var displayDuration = randomGif.getAttribute("data-duration");
     var intervalId = setInterval(function() {
-      if (displayCount === 2) {
+      if (displayCount === 1) {
         clearInterval(intervalId);
         randomGif.style.display = "none";
         bck_anim.style.display = "none";
