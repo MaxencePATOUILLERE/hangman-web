@@ -55,7 +55,7 @@ body{
     position: absolute;
     top: 0;
     right: 0;
-    margin-top: 20px;
+    margin-top: 5px;
 }
 #status, #connect_img{
     display:inline-block;
@@ -110,3 +110,65 @@ button:hover{
         width: 25%;
     }
 }
+
+/*PLAYER*/
+#playerList,#beforeplayer{
+    display:inline-block;
+    font-family: VCR, Serif;
+    font-size: 25px;
+    color: white;
+    white-space: nowrap;
+}
+
+#PlayerBlock{
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-top: 5px;
+}
+/*RESPONSIVE*/
+@media (max-width: 768px) {
+    #beforeplayer{
+        font-size: 20px;
+    }
+    #playerList{
+        font-size: 20px;
+    }
+}
+@media (max-width: 480px) {
+    #beforeplayer{
+        font-size: 15px;
+    }
+    #playerList{
+        font-size: 15px;
+    }
+}
+
+/*DIFFICULTY*/
+#selectblock{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#difficulty {
+    font-family: AmongUs;
+    font-size:50px;
+    width: 12%;
+    height: 5%;
+}
+/*RESPONSIVE*/
+@media (max-width: 768px) {
+    #difficulty{
+        font-size:20px;
+        width: 25%;
+        height: 5%;
+}
+@media (max-width: 480px) {
+    #difficulty {
+        font-size:20px;
+        width: 25%;
+        height: 5%;
+    }
+}}

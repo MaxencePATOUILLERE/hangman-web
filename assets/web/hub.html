@@ -13,15 +13,20 @@
     <p id="status"></p>
     <img id="connect_img" src="">
 </div>
-<p id="playerList"></p>
+<div id="PlayerBlock">
+    <p id="beforeplayer">Connected with: </p>
+    <p id="playerList"></p>
+</div>
 <div id="adminFields">
     <form method="POST">
-        <select id="difficulty">
-            <option value="">Choose Difficulty</option>
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-        </select>
+        <div id="selectblock">
+            <select id="difficulty">
+                <option value="">Choose Difficulty</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+        </div>
         <div id="gamemode">
             <button id="solobutton" onclick="sendSolo()">Solo</button>
             <button id="multibutton" onclick="sendMulti()" action="multi">Multi</button>
