@@ -2,15 +2,24 @@
 <html>
 <head>
     <title>Hangman</title>
+    <link href="http://localhost:8080/web/css/multiplayer.css" rel="stylesheet">
 </head>
 <body>
 <!-- websockets.html -->
-<p id="status"></p>
+<div id="status_block">
+    <p id="status"></p>
+    <img id="connect_img" src="">
+</div>
 <h1>Multiplayer</h1>
-<p id="turn"></p>
-<input id="input" type="text" />
-<button id="button" onclick="send()">Send</button>
-<p id="letters">Used letters : </p>
+<div id ="turnblock">
+    <p id="turn"></p>
+</div>
+<div id="input_block">
+    <input id="input" type="text" />
+    <button id="button" onclick="send()">Send</button>
+</div>
+    <p id="letters">Used letters : </p>
+
 <p id="word"></p>
 <p id="result"></p>
 <button id="reset" style="visibility: hidden;" onclick="sendResetRequest()">reset</button>
@@ -22,16 +31,22 @@
     const socket = new WebSocket("ws://localhost:8080/multi/ws");
 
 
+    input.addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+            send();
+        }
+    });
     socket.onopen = function () {
         console.log("Status: Connected\n");
         document.getElementById("status").innerHTML = "Connected";
         socket.send(": AskInfoSend");
-
+        document.getElementById("connect_img").src = "http://localhost:8080/web/images/connected.png";
     };
 
     socket.onclose = function(){
         console.log("Status: Disconected\n");
         document.getElementById("status").innerHTML = "Disconnected";
+        document.getElementById("connect_img").src = "http://localhost:8080/web/images/unconnected.png";
     };
 
     socket.onmessage = function (e) {

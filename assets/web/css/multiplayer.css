@@ -6,16 +6,30 @@
     font-family: 'VCR';
     src: url("http://localhost:8080/web/fonts/VCR_OSD_MONO_1.001.ttf");
 }
-
-/* BLOCK */
 body{
-    background-image: url("http://localhost:8080/web/images/SOLO_BACKGROUND.png");
+    background-image: url("http://localhost:8080/web/images/MULTI_BACKGROUND.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
 }
-
+/*Unique*/
+#letters{
+    font-family: VCR, Serif;
+    color: white;
+    text-align: center;
+    font-size: 40px;
+}
+@media (max-width: 768px) {
+    #letters {
+        font-size: 20px;
+    }
+}
+@media (max-width: 480px) {
+    #letters {
+        font-size:20px;
+    }
+}
 /*STATUS*/
 #status_block{
     position: absolute;
@@ -44,34 +58,33 @@ body{
     }
 }
 @media (max-width: 480px) {
-    #status{
+    #status {
         font-size: 15px;
     }
-    #connect_img{
+
+    #connect_img {
         max-width: 15px;
     }
 }
-
-/*ATTEMPTS*/
-#attempts_block{
-    text-align: center;
-}
-#attempts, #mort{
+/*NO DIV*/
+h1{
     font-family: VCR, Serif;
-    display:inline-block;
+    font-size: 100px;
     color: red;
-    font-size: 40px;
+    text-align: center;
+    margin-bottom: 100px;
 }
 @media (max-width: 768px) {
-    #attempts,#mort {
-        font-size: 20px;
+    h1 {
+        font-size: 40px;
     }
 }
 @media (max-width: 480px) {
-    #attempts,#mort {
-        font-size:20px;
+    h1 {
+        font-size:40px;
     }
 }
+
 /*INPUT*/
 #input_block{
     display: flex;
@@ -87,75 +100,7 @@ body{
     text-align: center;
 }
 
-/*AMONG GUYS*/
-#among_img {
-    min-width: 900px;
-    position: absolute;
-    bottom: 25%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    flex-wrap: wrap;
-}
-#gif_block img{
-    max-width: 60%;
-    max-height: 60%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: none;
-    background-color: transparent;
-}
-#animation_block img{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: none;
-    width:100%;
-    height: 100%;
-}
-#among_img img {
-    flex: 0 0 auto;
-    max-width: calc(10% - 10px);
-    margin: 5px;
-}
-
-/* NO DIV */
-h1{
-    font-family: VCR, Serif;
-    font-size: 100px;
-    color: lightskyblue;
-    text-align: center;
-    margin-bottom: 0;
-}
-@media (max-width: 768px) {
-    h1 {
-        font-size: 40px;
-    }
-}
-@media (max-width: 480px) {
-    h1 {
-        font-size:40px;
-    }
-}
-#letters{
-    font-family: VCR, Serif;
-    color: white;
-    text-align: center;
-    font-size: 40px;
-}
-@media (max-width: 768px) {
-    #letters {
-        font-size: 20px;
-    }
-}
-@media (max-width: 480px) {
-    #letters {
-        font-size:20px;
-    }
-}
+/*WORDS*/
 #word{
     font-family: VCR, Serif;
     color: white;
@@ -173,7 +118,31 @@ h1{
     }
 }
 
-/*RESET BUTTON*/
+/*TURNS*/
+#turnblock{
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-top: 20px;
+}
+#turn{
+    font-family: VCR, Serif;
+    color: white;
+    text-align: center;
+    font-size: 30px;
+}
+@media (max-width: 768px) {
+    #turn {
+        font-size: 15px;
+    }
+}
+@media (max-width: 480px) {
+    #turn {
+        font-size:15px;
+    }
+}
+
+/*RESET*/
 #reset{
     position: absolute;
     top: 30%;
